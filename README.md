@@ -42,7 +42,7 @@ INSERT INTO club_member_info_cleaned
 SELECT * FROM club_member_info;
 ```
 ##### Step 3: Cleaningggggg!!!!
-The data from the CSV file that I received and imported to DBeaver client seems to be very messy. So, firstly I started to trim and capitalize all the name in the full_name column, kick all the abnormal people with extreme high in age (I take the range of age from 1 to 150 instead of 100 as there is some record showing that some people can live up to 140 years old) and then I take the the first 10 rows with no null data (just simply I hate the missing data) for examples as below:
+The data from the CSV file that I received and imported to DBeaver client seems to be very messy. So, firstly I started to trim and capitalize all the name in the full_name column, kick all the abnormal people with extreme high in age (I take the range of age from 1 to 150 instead of 100 as there are some records showing that some people can live up to 140 years old) and then I take the the first 10 rows with no missing data (just simply I hate the missing data so bad hehe) for examples as below:
 |full_name|age|martial_status|email|phone|full_address|job_title|membership_date|
 |---------|---|--------------|-----|-----|------------|---------|---------------|
 |ADDIE LUSH|40|married|alush0@shutterfly.com|254-389-8708|3226 Eastlawn Pass,Temple,Texas|Assistant Professor|7/31/2013|
@@ -56,7 +56,18 @@ The data from the CSV file that I received and imported to DBeaver client seems 
 |FEY KLOSS|52|married|fkloss9@godaddy.com|808-177-0318|8976 Jackson Park,Honolulu,Hawaii|Chemical Engineer|11/5/2014|
 |DARWIN VENTAM|42|married|dventama@uol.com.br|203-993-0118|2254 Express Hill,New Haven,Connecticut|Chemical Engineer|3/12/2017|
 
-Syntax for the above conditions:
+##### Syntax for the above table
+Trimming the column full_name:
+```sql
+UPDATE club_member_info_cleaned
+SET full_name = TRIM(full_name);
+```
+Capitalize all the names in the column:
+```sql
+UPDATE club_member_info_cleaned
+SET full_name = UPPER(full_name);
+```
+Select the 10 sample rows:
 ```sql
 SELECT * FROM club_member_info_cleaned
 WHERE full_name <> ""
@@ -70,6 +81,19 @@ AND membership_date <> ""
 LIMIT 10;
 ```
 Well, at this step, I may already had a table with the wanted data. However, I didn't mean to delete the all the unused rows, and if you are insisted on deleting them, here is the syntax:
+To trim all the column (except full_name as we already did it before) to make sure the will be no spaces in the selected columns:
+```sql
+UPDATE club_member_info_cleaned
+SET 
+    age = TRIM(age),
+    maritial_status = TRIM(maritial_status),
+    email = TRIM(email),
+    phone = TRIM(phone),
+    full_address = TRIM(full_address),
+    job_title = TRIM(job_title),
+    membership_date = TRIM(membership_date);
+```
+To delete all the missing data:
 ```sql
 DELETE FROM club_member_info_cleaned
 WHERE full_name = ""
@@ -81,5 +105,18 @@ OR full_address = ""
 OR job_title = ""
 OR membership_date = "";
 ```
+Plan B: To replace all the missing data with 'null' instead, here is the syntax: 
+```sql
+UPDATE club_member_info_cleaned
+SET 
+    age = 'null' WHERE age = '',
+    maritial_status = 'null' WHERE maritial_status = '',
+    email = 'null' WHERE email = '',
+    phone = 'null' WHERE phone = '',
+    full_address = 'null' WHERE full_address = '',
+    job_title = 'null' WHERE job_title = '',
+    membership_date = 'null' WHERE membership_date = '';
+```
+
 
 
