@@ -28,7 +28,7 @@ I coppied the DDL of the former table the renamed the naming part of the new tab
 CREATE TABLE club_member_info_cleaned (
 	full_name VARCHAR(50),
 	age INTEGER,
-	martial_status VARCHAR(50),
+	maritial_status VARCHAR(50),
 	email VARCHAR(50),
 	phone VARCHAR(50),
 	full_address VARCHAR(50),
