@@ -129,6 +129,83 @@ UPDATE club_member_info_cleaned
 SET 
     membership_date = null WHERE membership_date = '';
 ```
+##### The membership_date in the data set is also messy!!
+To clean that mess, I had to create a new column and just call it "A" which is the VARCHAR type using the syntax:
+```sql
+ALTER TABLE club_member_info_cleaned
+ADD COLUMN A VARCHAR(10);
+```
+Then from membership_date column, I updated the new data for A column to match the format of "MM/DD/YYYY" by:
+```sql
+UPDATE club_member_info_cleaned
+SET A = 
+    CASE
+        WHEN membership_date LIKE "_/__/____" THEN "0" || SUBSTR(membership_date, 1, 1) || SUBSTR(membership_date, 2)
+        WHEN membership_date LIKE "__/_/____" THEN SUBSTR(membership_date, 1, 3) || "0" || SUBSTR(membership_date, 4)
+        WHEN membership_date LIKE "_/_/____" THEN "0" || SUBSTR(membership_date, 1, 2) || "0" || SUBSTR(membership_date, 3)
+        WHEN membership_date LIKE "__/__/____" THEN membership_date
+        ELSE NULL
+    END;
+```
+Then, I will have column A like this (first 10 rows for example):
+|A|
+|-|
+|07/31/2013|
+|05/27/2018|
+|10/06/2017|
+|10/20/2015|
+|05/29/2019|
+|03/24/2015|
+|04/17/2013|
+|11/16/2014|
+|03/12/1921|
+|11/05/2014|
 
-
+Then I created the column B (VARCHAR) just to adjust the format of from the column A, the column B would have the format of "YYYY-MM-DD" in order for SQLITE to regconize it as the type of date and from that I created a new column called membership_date_cleaned column with the data type of DATE and its data is from the column B (I was not sure that if I can create a column B with the DATE type and insert the data from column A directly to B while A is still in the format of "YYYY-MM-DD").
+##### To create column B, I simply used this syntax:
+```sql
+ALTER TABLE club_member_info_cleaned
+ADD COLUMN B VARCHAR(10);
+```
+##### To set up the data inside B with the right format from A, I coded like:
+```sql
+UPDATE club_member_info_cleaned
+SET B = SUBSTR(A,7,4) || "-" || SUBSTR(A,1,2) || "-" || SUBSTR(A,4,2)
+WHERE A IS NOT NULL;
+```
+Finally, I have the result that I need for column B as below (5 example rows):
+|B|
+|-|
+|2013-07-31|
+|2018-05-27|
+|2017-10-06|
+|2015-10-20|
+|2019-05-29|
+In the end, the time to create the new column called membership_date_cleaned (DATE). I transfered all the data from B to the new column with the format "%Y-%m-%d". Here are the steps:
+###### Step 1: Create a new column called membership_date_cleaned (DATE):
+```sql
+ALTER TABLE club_member_info_cleaned 
+ADD COLUMN membership_date_cleaned DATE;
+```
+###### Step 2: Add data to membership_date_cleaned:
+```sql
+UPDATE club_member_info_cleaned
+SET membership_date_cleaned = STRFTIME('%Y-%m-%d',B)
+WHERE B IS NOT NULL;
+```
+# Done!!!
+Eventually, I've had what I wanted so far, a table or dataset with no messy, date data is illustrated correctly like below (10 example rows and retrieve neccessary columns only):
+|full_name|age|maritial_status|email|phone|full_address|job_title|membership_date_cleaned|
+|---------|---|---------------|-----|-----|------------|---------|-----------------------|
+|ADDIE LUSH|40|married|alush0@shutterfly.com|254-389-8708|3226 Eastlawn Pass,Temple,Texas|Assistant Professor|2013-07-31|
+|ROCK CRADICK|46|married|rcradick1@newsvine.com|910-566-2007|4 Harbort Avenue,Fayetteville,North Carolina|Programmer III|2018-05-27|
+|SYDEL SHARVELL|46|divorced|ssharvell2@amazon.co.jp|702-187-8715|4 School Place,Las Vegas,Nevada|Budget/Accounting Analyst I|2017-10-06|
+|CONSTANTIN DE LA CRUZ|35||co3@bloglines.com|402-688-7162|6 Monument Crossing,Omaha,Nebraska|Desktop Support Technician|2015-10-20|
+|GAYLOR REDHOLE|38|married|gredhole4@japanpost.jp|917-394-6001|88 Cherokee Pass,New York City,New York|Legal Assistant|2019-05-29|
+|WANDA DEL MAR|44|single|wkunzel5@slideshare.net|937-467-6942|10864 Buhler Plaza,Hamilton,Ohio|Human Resources Assistant IV|2015-03-24|
+|JOANN KENEALY|41|married|jkenealy6@bloomberg.com|513-726-9885|733 Hagan Parkway,Cincinnati,Ohio|Accountant IV|2013-04-17|
+|JOETE CUDIFF|51|divorced|jcudiff7@ycombinator.com|616-617-0965|975 Dwight Plaza,Grand Rapids,Michigan|Research Nurse|2014-11-16|
+|MENDIE ALEXANDRESCU|46|single|malexandrescu8@state.gov|504-918-4753|34 Delladonna Terrace,New Orleans,Louisiana|Systems Administrator III|1921-03-12|
+|FEY KLOSS|52|married|fkloss9@godaddy.com|808-177-0318|8976 Jackson Park,Honolulu,Hawaii|Chemical Engineer|2014-11-05|
+###### *Note: I did not replace the null value with other value as I attempt not to take the null value for analyzing.
 
