@@ -109,25 +109,25 @@ Plan B: To replace all the missing data with 'null' instead, here is the syntax:
 ```sql
 UPDATE club_member_info_cleaned
 SET 
-    age = 'null' WHERE age = '';
+    age = null WHERE age = '';
 UPDATE club_member_info_cleaned
 SET 
-    maritial_status = 'null' WHERE maritial_status = '';
+    maritial_status = null WHERE maritial_status = '';
 UPDATE club_member_info_cleaned
 SET 
-    email = 'null' WHERE email = '';
+    email = null WHERE email = '';
 UPDATE club_member_info_cleaned
 SET 
-    phone = 'null' WHERE phone = '';
+    phone = null WHERE phone = '';
 UPDATE club_member_info_cleaned
 SET 
-    full_address = 'null' WHERE full_address = '';
+    full_address = null WHERE full_address = '';
 UPDATE club_member_info_cleaned
 SET 
-    job_title = 'null' WHERE job_title = '';
+    job_title = null WHERE job_title = '';
 UPDATE club_member_info_cleaned
 SET 
-    membership_date = 'null' WHERE membership_date = '';
+    membership_date = null WHERE membership_date = '';
 ```
 
 
