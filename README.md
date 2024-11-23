@@ -208,4 +208,5 @@ Eventually, I've had what I wanted so far, a table or dataset with no messy, dat
 |MENDIE ALEXANDRESCU|46|single|malexandrescu8@state.gov|504-918-4753|34 Delladonna Terrace,New Orleans,Louisiana|Systems Administrator III|1921-03-12|
 |FEY KLOSS|52|married|fkloss9@godaddy.com|808-177-0318|8976 Jackson Park,Honolulu,Hawaii|Chemical Engineer|2014-11-05|
 ###### *Note: I did not replace the null value with other value as I attempt not to take the null value for analyzing.
+Thank you for your time to read this small project. As I am just beginning my journey in the Data Analyst field, I understand that my approach to solving this problem may not be the most efficient or effective yet. However, I am committed to learning and improving every day to become a better version of myself.
 
